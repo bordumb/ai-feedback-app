@@ -58,7 +58,7 @@ ai-feedback-app/
 
 1️⃣ **Clone the repo:**  
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-feedback-app.git
+git clone https://github.com/bordumb/ai-feedback-app.git
 cd ai-feedback-app
 ```
 
