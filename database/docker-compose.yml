@@ -1,0 +1,32 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: my_database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ../backend
+    container_name: backend_api
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      ENV: production
+      DATABASE_URL_DOCKER: postgresql://myuser:mypassword@postgres_db:5432/feedback_db
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
+
