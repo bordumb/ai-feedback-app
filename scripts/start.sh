@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Automatically set environment to development (unless already set)
+export ENV=${ENV:-development}
+
 echo "🚀 Checking for existing processes on ports 3001 and 8000..."
 
 # Kill any process running on port 3001 (Next.js)

@@ -23,8 +23,12 @@ export default function Chatbot() {
             setResponse("Error submitting feedback. Check the console for details.");
         }
     };
-    
 
+    export const fetchFeedback = async () => {
+        const res = await fetch("http://localhost:8000/feedback/");
+        return res.json();
+    };
+    
     return (
         <div>
             <h1>AI Feedback Chatbot</h1>
