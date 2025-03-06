@@ -1,0 +1,20 @@
+{
+    "name": "ai-feedback-app",
+    "version": "1.0.0",
+    "description": "AI-powered customer feedback chatbot",
+    "scripts": {
+      "dev": "next dev -p 3001",
+      "build": "next build",
+      "start": "next start"
+    },
+    "dependencies": {
+      "next": "latest",
+      "react": "latest",
+      "react-dom": "latest"
+    },
+    "devDependencies": {
+    "typescript": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+    }
+}
