@@ -1,7 +1,13 @@
+import sys
+import os
 import bcrypt
 from sqlalchemy.orm import Session
+
+# Ensure correct module resolution
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 from app.models.database import SessionLocal
-from app.models.account_model import Account
+from app.models.accounts import Account
 
 
 # 🔹 Define Admin Credentials

@@ -14,6 +14,7 @@ frontend/.npm/
 frontend/package-lock.json
 
 # 🐍 Python (Backend)
+**/__pycache__/
 backend/__pycache__/
 backend/.venv/
 backend/venv/

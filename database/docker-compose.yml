@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   postgres:
     image: postgres:15
@@ -9,6 +11,14 @@ services:
       POSTGRES_DB: my_database
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # ✅ Persistent storage
+      - ./schemas:/docker-entrypoint-initdb.d  # ✅ Mount schemas
+    healthcheck:  # ✅ Ensures database is ready before backend starts
+      test: ["CMD-SHELL", "pg_isready -U postgres -d my_database"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
   backend:
     build: ../backend
@@ -16,10 +26,14 @@ services:
     restart: always
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_healthy  # ✅ Waits for PostgreSQL health check
     environment:
       ENV: production
-      DATABASE_URL_DOCKER: postgresql://postgres:postgres@postgres_db:5432/my_database
+      DATABASE_URL: postgresql://postgres:postgres@postgres_db:5432/my_database
     ports:
       - "8000:8000"
-    command: ["/bin/sh", "-c", "sleep 5 && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    command: >
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  postgres_data:

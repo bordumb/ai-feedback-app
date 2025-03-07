@@ -1,8 +1,7 @@
 // frontend/src/pages/dashboard.tsx
 
 import React, { useEffect, useState } from "react";
-import { fetchAllFeedback } from "../api/index";
-import axios from "axios";
+import { fetchAllFeedback } from "../api/index"; // ✅ Use the abstracted API function
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
@@ -23,7 +22,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // ✅ Check authentication
+  // ✅ Fetch Feedback & Check Auth
   useEffect(() => {
     const token = Cookies.get("access_token");
 
@@ -32,19 +31,18 @@ export default function Dashboard() {
       return;
     }
 
-    axios
-      .get("http://localhost:8000/feedback", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then((res) => {
-        setFeedbackList(res.data);
+    fetchAllFeedback()
+      .then((data) => {
+        setFeedbackList(data);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Error fetching feedback:", err);
         Cookies.remove("access_token");
-        router.push("/auth"); // Redirect if token is invalid
+        setError("Session expired. Please log in again.");
+        router.push("/auth");
       });
-  }, []);
+  }, [router]); // ✅ Dependency array ensures re-run on navigation
 
   // ✅ Handle Logout
   const handleLogout = () => {
@@ -87,7 +85,7 @@ export default function Dashboard() {
         Logout
       </button>
 
-      {/* Show loading indicator */}
+      {/* Show loading/error messages */}
       {loading && <p>Loading feedback...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 

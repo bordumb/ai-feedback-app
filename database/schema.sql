@@ -1,3 +1,3 @@
 -- database/schema.sql
-\i schema/accounts.sql
-\i schema/feedback.sql
+\i schemas/accounts.sql
+\i schemas/feedback.sql
