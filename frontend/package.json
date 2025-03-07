@@ -2,6 +2,7 @@
   "name": "ai-feedback-app",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "next.config.js",
   "dependencies": {
     "acorn": "^8.14.1",

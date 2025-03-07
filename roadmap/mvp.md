@@ -60,6 +60,8 @@ frontend/src/api/index.ts → Add API call to fetch stored feedback.
 💡 Questions
 What table component should I use in Next.js for displaying feedback?
 How can I implement filtering & sorting in the UI?
+
+
 🔹 4. Add Authentication (Login System)
 Problem:
 Right now, anyone can submit feedback, which isn’t ideal for businesses.
@@ -75,6 +77,8 @@ frontend/src/pages/auth.tsx → Create a login UI in Next.js.
 💡 Questions
 Should I store tokens in HTTP-only cookies or localStorage?
 How can I secure API routes so that only logged-in users can access the dashboard?
+
+
 🔹 5. Deploy the App (Cloud Hosting)
 Problem:
 Right now, the app only runs locally. I need to deploy it so businesses can use it online.

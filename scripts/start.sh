@@ -2,6 +2,8 @@
 
 # Automatically set environment to development (unless already set)
 export ENV=${ENV:-development}
+export PYTHONPATH=$(pwd)/backend
+export NODE_ENV=development
 
 echo "🚀 Checking for existing processes on ports 3001 and 8000..."
 
@@ -19,42 +21,51 @@ fi
 
 echo "✅ All old processes stopped. Starting the application..."
 
-echo "🚀 Starting the application..."
-echo "Current directory: $(pwd)"
-echo "Checking for frontend directory..."
+echo "🔹 Checking Node.js version..."
+REQUIRED_NODE="20"
+CURRENT_NODE=$(node -v | cut -d. -f1 | cut -c2-)
 
-# Start backend
-if [ -d "backend" ]; then
-    cd backend
-    if [ -f "app/main.py" ]; then
-        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
-        echo "✅ FastAPI backend started on http://localhost:8000"
-    else
-        echo "❌ ERROR: 'app/main.py' not found in backend/. Is FastAPI set up?"
-        exit 1
-    fi
-    cd ..
-else
-    echo "❌ ERROR: 'backend/' directory not found!"
-    exit 1
+if [ "$CURRENT_NODE" -lt "$REQUIRED_NODE" ]; then
+    echo "❌ Node.js version is too old ($CURRENT_NODE). Switching to Node.js $REQUIRED_NODE..."
+    nvm use 20 || nvm install 20
 fi
 
-# Start frontend
-if [ -d "frontend" ]; then
-    echo "✅ Found frontend directory!"
-    cd frontend
-    if [ -f "package.json" ]; then
-        echo "✅ Found package.json! Starting Next.js..."
-        npm run dev -- -p 3001 &
-    else
-        echo "❌ ERROR: 'package.json' not found in frontend/. Run 'npm init' first."
-        exit 1
-    fi
-    cd ..
-else
-    echo "❌ ERROR: 'frontend/' directory not found! Listing current files..."
-    ls -l
-    exit 1
-fi
+echo "🔹 Installing frontend dependencies..."
+cd frontend
+npm install
+cd ..
+
+echo "🔹 Installing backend dependencies..."
+cd backend
+pip install -r requirements.txt
+cd ..
+
+echo "🔹 Removing stale Python cache..."
+find backend -name "__pycache__" -exec rm -rf {} +
+
+echo "🔹 Restarting Docker services..."
+docker-compose down
+docker-compose up -d
+
+# Run this if new tables added or schemas have changed
+# echo "🔹 Checking if database is already initialized..."
+# if ! docker exec -it postgres_db psql -U postgres -d my_database -c "SELECT 1 FROM accounts LIMIT 1;" > /dev/null 2>&1; then
+#     echo "⚡ Running migrations..."
+#     docker exec -it postgres_db psql -U postgres -d my_database -f database/schema.sql
+# else
+#     echo "✅ Database already initialized. Skipping migrations."
+# fi
+
+echo "🔹 Starting backend FastAPI server..."
+cd backend
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &
+echo "✅ FastAPI backend started on http://localhost:8000"
+cd ..
+
+echo "🔹 Starting frontend Next.js app..."
+cd frontend
+npm run dev -- -p 3001 &
+echo "✅ Next.js frontend started on http://localhost:3001"
+cd ..
 
 echo "✅ App is running! 🚀"

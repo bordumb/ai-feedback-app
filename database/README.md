@@ -175,3 +175,19 @@ CREATE TABLE feedback (
     created_at TIMESTAMP DEFAULT NOW()
 );
 ```
+
+# TODO:
+
+🔹 Next Steps for Full GDPR Compliance
+1️⃣ Privacy Policy Update
+
+Make sure your system explicitly states what user data is collected, why, and how long it’s retained.
+2️⃣ Data Export API
+
+Create an endpoint that allows users to download their data (export_token allows verification).
+3️⃣ Automated Deletion
+
+If a user requests account deletion, set deleted_at and remove personal data after a set retention period.
+4️⃣ Hashing Strategy
+
+Use SHA-256 or bcrypt to hash emails and phone numbers, so they’re stored securely without exposing real data.

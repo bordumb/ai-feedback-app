@@ -7,3 +7,8 @@ transformers
 torch
 scikit-learn
 python-dotenv
+sentence-transformers
+passlib 
+bcrypt 
+pyjwt
+python-multipart

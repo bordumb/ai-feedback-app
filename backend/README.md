@@ -120,4 +120,69 @@ uvicorn app.main:app --reload
 
 ---
 
+🧪 Testing the AI Model Locally
+Once the backend is running, you can test the AI-powered feedback analysis in two ways:
+
+Using curl (to interact with the FastAPI endpoint)
+Using Python (to call the function directly)
+1️⃣ Test with curl (via FastAPI)
+You can send feedback to the API and see the AI-generated category & sentiment using curl:
+
+sh
+Copy
+Edit
+curl -X POST "http://localhost:8000/feedback" \
+     -H "Content-Type: application/json" \
+     -d '{"user_input": "The UI is terrible and slow."}'
+Expected Response:
+json
+Copy
+Edit
+{
+  "user_input": "The UI is terrible and slow.",
+  "category": "performance",
+  "sentiment": "negative",
+  "created_at": "2025-03-06T02:26:00.454592",
+  "id": 10
+}
+If you get null values for category and sentiment, check that the AI model is correctly loaded in the backend logs.
+
+2️⃣ Test Directly in Python
+You can manually test the AI model inside the backend container or on your local machine.
+
+Inside the Docker Container:
+Enter the running backend container:
+sh
+Copy
+Edit
+docker exec -it backend_api /bin/sh
+Open a Python shell:
+sh
+Copy
+Edit
+python
+Run the following:
+python
+Copy
+Edit
+from app.services.ai_feedback import analyze_feedback
+
+feedback_text = "The checkout process is confusing and slow."
+result = analyze_feedback(feedback_text)
+
+print(result)  # Should output the category & sentiment
+Expected Output:
+python
+Copy
+Edit
+{'category': 'usability', 'sentiment': 'negative'}
+If this works but curl requests return null, ensure that:
+
+The AI function is properly called inside backend/app/api/routes/feedback.py.
+The backend service has restarted to apply changes:
+sh
+Copy
+Edit
+docker restart backend_api
+
 Let me know if you need **any additional details!** 🚀🔥
