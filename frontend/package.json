@@ -23,6 +23,7 @@
     "async-function": "^1.0.0",
     "available-typed-arrays": "^1.0.7",
     "axe-core": "^4.10.3",
+    "axios": "^1.8.2",
     "axobject-query": "^4.1.0",
     "balanced-match": "^1.0.2",
     "brace-expansion": "^1.1.11",
