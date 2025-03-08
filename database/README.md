@@ -191,3 +191,70 @@ If a user requests account deletion, set deleted_at and remove personal data aft
 4️⃣ Hashing Strategy
 
 Use SHA-256 or bcrypt to hash emails and phone numbers, so they’re stored securely without exposing real data.
+
+# Debugging Notes
+
+6. Troubleshooting Checklist
+Docker not running?
+bash
+Copy
+Edit
+open -a Docker
+docker info
+Containers not up?
+bash
+Copy
+Edit
+docker compose ps
+docker compose logs backend_api
+docker compose logs postgres_db
+Database not found or “host not found”?
+Check POSTGRES_HOST=postgres.
+Both backend_api and postgres must be in the same Docker Compose file.
+“Connection refused”?
+The database might be starting slower than the backend. Use healthcheck with depends_on: condition: service_healthy.
+Recv failure: Connection reset by peer?
+The backend is crashing. Check logs to see why.
+🚀 Final Workflow Summary
+Start Docker
+bash
+Copy
+Edit
+open -a Docker
+Navigate to your project
+bash
+Copy
+Edit
+cd ai-feedback-app
+Start everything
+bash
+Copy
+Edit
+docker compose up -d --build
+Check containers
+bash
+Copy
+Edit
+docker compose ps
+docker logs backend_api --tail=50
+If database is new, run
+bash
+Copy
+Edit
+docker exec -it postgres_db psql -U postgres -d my_database -f database/schema.sql
+Create an admin
+bash
+Copy
+Edit
+python backend/app/scripts/create_admin_account.py
+Test
+bash
+Copy
+Edit
+curl http://localhost:8000/docs
+Stop everything
+bash
+Copy
+Edit
+docker compose down
+With these steps in place—one Docker Compose file, the correct environment variables, and a wait-for-database strategy—your entire environment should “just work” next time.

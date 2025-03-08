@@ -1,5 +1,6 @@
 // frontend/src/api/index.ts
 import Cookies from "js-cookie";
+import { Feedback } from "../types"; // Import the Feedback type
 
 const API_BASE_URL = "http://localhost:8000";
 
@@ -10,7 +11,7 @@ async function apiRequest<T>(endpoint: string, method: string = "GET", body?: ob
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     method,
     headers: {
-      "Authorization": `Bearer ${token}`,  // ✅ Include token in request
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: body ? JSON.stringify(body) : undefined,
@@ -24,10 +25,9 @@ async function apiRequest<T>(endpoint: string, method: string = "GET", body?: ob
 }
 
 export function sendFeedback(input: string) {
-  return apiRequest("/feedback", "POST", { user_input: input });
+  return apiRequest<{ message: string }>("/feedback", "POST", { user_input: input });
 }
 
-export function fetchAllFeedback() {
-  return apiRequest("/feedback", "GET");
+export function fetchAllFeedback(): Promise<Feedback[]> {
+  return apiRequest<Feedback[]>("/feedback", "GET");
 }
-

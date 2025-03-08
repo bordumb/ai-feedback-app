@@ -4,8 +4,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
-from app.models.feedback_table import feedback_table
-from app.models.accounts import Account
+from .feedback_table import feedback_table
+from .accounts import Account
+
 
 
 load_dotenv()
@@ -52,7 +53,7 @@ def get_database_url(config: dict) -> str:
     """
     if config["env"] == "production":
         return f"postgresql://{config['user']}:{config['password']}@{config['host']}:{config['port']}/{config['db']}"
-    return f"postgresql://{config['user']}:{config['password']}@localhost:{config['port']}/{config['db']}"
+    return f"postgresql://{config['user']}:{config['password']}@{config['host']}:{config['port']}/{config['db']}"
 
 
 # Create database engine

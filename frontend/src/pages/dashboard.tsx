@@ -4,14 +4,8 @@ import React, { useEffect, useState } from "react";
 import { fetchAllFeedback } from "../api/index"; // ✅ Use the abstracted API function
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { Feedback } from "../types"; // Import the Feedback type
 
-interface Feedback {
-  id: number;
-  user_input: string;
-  category: string;
-  sentiment: string;
-  created_at: string;
-}
 
 export default function Dashboard() {
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
@@ -32,7 +26,7 @@ export default function Dashboard() {
     }
 
     fetchAllFeedback()
-      .then((data) => {
+      .then((data: Feedback[]) => {
         setFeedbackList(data);
         setLoading(false);
       })

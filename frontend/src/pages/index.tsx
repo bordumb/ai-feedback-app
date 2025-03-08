@@ -2,6 +2,7 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { sendFeedback } from "../api/index"; // ✅ Use the abstracted API function
+import Navbar from "../components/Navbar"; 
 
 export default function Chatbot() {
   const [input, setInput] = useState("");
@@ -20,7 +21,7 @@ export default function Chatbot() {
     }
 
     try {
-      const data = await sendFeedback(input, token); // ✅ Uses abstracted function
+      const data = await sendFeedback(input); // ✅ Uses abstracted function
       setResponse(JSON.stringify(data, null, 2));
     } catch (err) {
       console.error("Error sending feedback:", err);

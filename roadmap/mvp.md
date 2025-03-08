@@ -93,6 +93,7 @@ Deploy backend (FastAPI)
 Railway.app (Simple FastAPI hosting)
 Render.com (Good free tier)
 AWS/GCP (Production scaling)
+
 💡 Questions
 What’s the best deployment strategy for this project?
 How can I set up a production database (PostgreSQL) in the cloud?

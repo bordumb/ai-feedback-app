@@ -185,4 +185,8 @@ Copy
 Edit
 docker restart backend_api
 
-Let me know if you need **any additional details!** 🚀🔥
+## Data Setup
+
+```sh
+docker exec -it backend_api python app/scripts/create_admin_account.py
+```

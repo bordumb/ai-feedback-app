@@ -5,6 +5,25 @@ export ENV=${ENV:-development}
 export PYTHONPATH=$(pwd)/backend
 export NODE_ENV=development
 
+echo "🚀 Restarting Docker to ensure a fresh start..."
+
+# Kill any existing Docker processes
+pkill Docker
+
+sleep 5  # Adjust if needed
+
+# Restart Docker
+open -a Docker
+
+# Wait for Docker to fully restart
+echo "⏳ Waiting for Docker to restart..."
+while ! docker info &> /dev/null; do
+    echo "⏳ Waiting for Docker daemon..."
+    sleep 10  # Adjust if needed
+done
+
+echo "✅ Docker is running!"
+
 echo "🚀 Checking for existing processes on ports 3001 and 8000..."
 
 # Kill any process running on port 3001 (Next.js)
@@ -44,8 +63,8 @@ echo "🔹 Removing stale Python cache..."
 find backend -name "__pycache__" -exec rm -rf {} +
 
 echo "🔹 Restarting Docker services..."
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 
 # Run this if new tables added or schemas have changed
 # echo "🔹 Checking if database is already initialized..."

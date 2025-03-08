@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 from app.models.database import SessionLocal
 from app.models.accounts import Account
+from app.models.signup_request import SignupRequest
 
 # Load environment variables
 load_dotenv()
@@ -48,6 +49,28 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta = None):
     expire = datetime.datetime.utcnow() + (expires_delta or datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+# 🔹 SIGNUP: Create a New User Account
+@router.post("/signup")
+async def signup(signup_user: SignupRequest, db: Session = Depends(get_db)):
+    existing_user = db.query(Account).filter(Account.email == signup_user.email).first()
+    
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    new_user = Account(
+        email=signup_user.email,
+        hashed_password=pwd_context.hash(signup_user.password),
+        first_name=signup_user.first_name,
+        last_name=signup_user.last_name,
+        is_active=True,
+        is_verified=False  # Set based on verification logic
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return {"message": "User created successfully"}
 
 # 🔹 Login Route: Authenticate Against Database
 @router.post("/login")
